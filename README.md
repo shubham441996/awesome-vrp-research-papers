@@ -64,13 +64,82 @@ Papers employing genetic algorithms combined with local search operators for sol
 
 ## 🎯 Clustering-Based Approaches
 
-Papers utilizing clustering techniques to partition customers or routes, often combined with other heuristics.
+### Cluster-First Route-Second (CFRS) Methods
 
-| Year | Title | Authors | Link | Key Contribution | Status |
-|------|--------|----------|------|-----------------|--------|
-| 1999 | Growing Self-Organizing Map (GSOM) | Robyn F. Harrison et al. | [Link](https://en.wikipedia.org/wiki/Self-organizing_map#Variants) | Self-organizing clustering for spatial partitioning | ⚠ Reference |
-| 2001 | Efficient Metaheuristic for the Multi-Depot VRP | Cordeau, J. F., Laporte, G. | [Link](https://www.sciencedirect.com/science/article/pii/S0377221701000703) | Clustering for multi-depot instances | ✓ Verified |
+Papers and algorithms utilizing clustering techniques to partition customers into routes, combined with routing optimization.
 
+#### Foundational Cluster-First Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 1974 | Sweep Algorithm | Angle/Sweep-based | Gillett & Miller | CVRP | Polar angle sorting around depot, greedy accumulation | Yes | Limited | Partial | Gillett & Miller (1974) | O(n log n) | Very High | Foundational CFRS method, still widely used | ✓ Verified |
+| 1981 | Fisher-Jaikumar Algorithm | Generalized Assignment Problem (GAP) | Fisher & Jaikumar | CVRP, VRP | Seed selection, insertion costs, GAP solving | Yes | No | No | Fisher & Jaikumar (1981) | O(n²k) | Medium | Classic CFRS algorithm, well-tested in literature | ✓ Verified |
+| 1983 | Route-first Cluster-second | Alternative CFRS | Beasley, Prins | VRP, CVRP | Reverse approach - route first then split | Yes | Limited | No | Beasley (1983), Prins extensions | Variable | Medium | Alternative approach, inverse order of cluster-first | ✓ Verified |
+
+#### Centroid-Based Clustering Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 1982 | K-means Clustering | Centroid-based | Lloyd, Forgy, et al. | CVRP, VRPTW | Iterative centroid-based partitioning | No (basic) | No | No | Lloyd (1982), Forgy et al. | O(nkd) | Very High | Standard ML algorithm, requires extensions for VRP | ✓ Verified |
+| 2018 | Constrained K-means | Centroid-based (Constrained) | k-means-constrained library | CVRP | K-means with cardinality/size constraints via MCF | Yes | No | No | k-means-constrained (MCF-based) | O(nkd) | Very High | Drop-in scikit-learn replacement, capacity as size limit | ✓ Verified |
+| 1987 | K-medoids Clustering | Centroid-based | Kaufman & Rousseeuw | CVRP, VRPTW | Uses actual data points as cluster centers (medoids) | No (basic) | No | No | Kaufman & Rousseeuw (1987), Comert et al. (2017) | O(n²k) | High | More robust than K-means for outliers | ✓ Verified |
+| 2024 | Constrained Centroid-based (CCBC) | Centroid-based (Constrained) | Recent researchers | CVRP, VRPTW | Theoretical connection to constrained clustering, centroid optimization | Yes | Yes | Partial | Towards connection between CVRP and CCBC (2024) | Polynomial | Medium | Newest theoretical framework (2024) | ✓ Recent |
+
+#### Density-Based Clustering Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 1996 | DBSCAN Clustering | Density-based | Ester, Kriegel, Sander, Xu | CVRP, VRPTW | Density-based spatial clustering, finds arbitrary shapes | No | No | No | Ester et al. (1996), Comert et al. (2017) | O(n log n) | High | Good for non-uniform customer distributions | ✓ Verified |
+| 2018 | Recursive DBSCAN | Density-based (Recursive) | Salhi & others | CVRPTW (high-volume) | Recursively applies DBSCAN until clusters meet size threshold | Yes | Yes | No | Salhi et al. (2018): Recursive-DBSCAN for CVRPTW | O(n log n)/iter | High | Excellent for large CVRPTW instances | ✓ Verified |
+| 2022 | DBSCAN+ (Workload Balance) | Density-based (Enhanced) | Recent researchers | VRPWB, MVRPWB | DBSCAN + Max-Min Distance Clustering (MMDC), noise handling | Yes | Partial | Yes | Cluster-based optimization framework (2022) | O(n log n)+ | Medium | Handles workload balancing, recent innovation | ✓ Recent |
+
+#### Optimization-Based Clustering Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 2021 | Constrained Clustering for CVRP (CC-CVRP) | MIP/Optimization-based | Alesiani, Ermiş, Gkiotsalitis | CVRP, MDVRP | Treats clusters as compressed nodes, solves high-level CVRP | Yes | Limited | Yes | Alesiani et al. (2021), Applied Artificial Intelligence | Poly+MIP | Medium-High | Reduces problem size significantly, promising approach | ✓ Verified |
+| 2018 | MIP-based Clustering | MIP/Optimization-based | Multiple researchers | VRPTW | Integer programming formulation of clustering problem | Yes | Yes | Partial | Abbatecola et al. (2018): Graph Partitioning ILP | NP-hard | Low | Optimal but slow, requires specialized solvers | ✓ Verified |
+| 2024 | Graph Partitioning Clustering | Graph-based | Recent researchers | VRPTW, MDVRPTW | Graph partitioning via ILP, community detection | Yes | Yes | Yes | New Cluster-Based Approach for VRPTW (2024) | Polynomial | Low | Modern approach, builds on graph theory | ✓ Recent |
+
+#### Hybrid & Multi-Phase Clustering Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 2007 | Dondo-Cerdá Three-Phase (MDVRPTW) | Heuristic Multi-Phase | Dondo & Cerdá | MDVRPTW | Phase 1: clustering (TW-aware), Phase 2: assignment, Phase 3: intra-routing | Yes | Yes | Yes | Dondo & Cerdá (2007): MDVRPTW cluster-based optimization | O(n²)+MIP | Medium-High | Most comprehensive for MDVRPTW, three-phase design | ✓ Verified |
+| 2024 | K-means + GA (Stas Crossover) | Centroid-based + Metaheuristic | Recent (GA-based enhancements) | VRPTW | K-means pre-clustering, then GA with specialized crossover | Yes | Yes | No | Stas crossover with K-mean clustering (2024) | O(nkd)+GA | Medium | Hybrid approach, good results on VRPTW benchmarks | ✓ Recent |
+| 2019 | Jaya Algorithm + Savings | Metaheuristic + Cluster-first | Recent researchers | Multi-objective VRPTW | Jaya heuristic explores cluster formations, combines with savings | Yes | Yes | Partial | Jaya Algorithm + Savings + 2-Opt (2019) | O(gen*n²) | Medium | Multi-objective optimization, emerging area | ✓ Recent |
+| 2019 | Sweep + Time-Window Variants | Angle/Sweep-based | Hertrich, Kressner et al. | VRPTW | Window-wise sweep, corrective sweep for time feasibility | Yes | Yes | No | Sweep Algorithms for CVRPTW (2019) | O(n log n)+TW | High | Extends classic sweep to explicitly handle time windows | ✓ Verified |
+
+#### Special Purpose Clustering Methods
+
+| Year | Algorithm | Category | Authors | Problem Type | Approach | Capacity Aware | Time Window | Multi-Obj | Reference | Complexity | Scalability | Notes | Status |
+|------|-----------|----------|---------|--------------|----------|---|---|---|---|---|---|---|---|
+| 2022 | Cluster-based Workload Balance (VRPWB) | Multi-objective Clustering | Recent researchers | VRPWB, MVRPWB | Clustering + workload fairness + route optimization | Yes | Partial | Yes | Cluster-based optimization for VRPWB (2022) | Poly+HEU | Medium-High | Emerging area: fairness and workload balance in VRP | ✓ Recent |
+
+### Key Characteristics Legend
+
+- **Capacity Aware**: Can handle vehicle capacity constraints natively
+- **Time Window**: Handles time window constraints (VRPTW)
+- **Multi-Obj**: Supports multi-objective optimization
+- **Scalability**: Performance on large instances (Very High > High > Medium > Low)
+
+### Clustering Algorithm Comparison Matrix
+
+| Algorithm | Best For | Complexity | Scalability | Maturity | Notes |
+|-----------|----------|-----------|-------------|----------|-------|
+| **Sweep Algorithm** | Standard CVRP | O(n log n) | Very High | Mature | Fast, foundational, still widely used |
+| **Fisher-Jaikumar** | CVRP variants | O(n²k) | Medium | Mature | Well-tested, good quality results |
+| **K-means** | Large-scale problems | O(nkd) | Very High | Mature | Simple but requires VRP extensions |
+| **Constrained K-means** | Capacity-constrained | O(nkd) | Very High | Mature | Better for CVRP, drop-in replacement |
+| **K-medoids** | Outlier-robust | O(n²k) | High | Mature | More robust but slower than K-means |
+| **DBSCAN** | Non-uniform distributions | O(n log n) | High | Mature | Good for realistic customer patterns |
+| **Recursive DBSCAN** | Large CVRPTW | O(n log n)/iter | High | Recent | Excellent scalability |
+| **MIP-based** | Small/optimal solutions | NP-hard | Low | Mature | Guaranteed optimal, slow |
+| **Graph Partitioning** | Complex constraints | Polynomial | Low | Recent | Modern approach, flexible |
+| **Dondo-Cerdá 3-Phase** | MDVRPTW | O(n²)+MIP | Medium-High | Mature | Most comprehensive multi-depot |
+| **Hybrid Methods** | General purpose | Variable | Medium-High | Recent | Combine strengths of multiple approaches |
+
+---
 ---
 
 ## 📍 Adaptive Large Neighborhood Search (ALNS)
